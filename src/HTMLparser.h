@@ -13,19 +13,25 @@ class HTMLElement
 public:
     MyDataStructure::String content;
     MyDataStructure::String type;
+    int _type;
     MyDataStructure::String attributes;
 
-    HTMLElement *children;
-    HTMLElement *parent;
-
+    HTMLElement* children;
+    HTMLElement* parent;
 };
+
 
 
 class HTMLparser
 {
 public:
-    HTMLparser(std::string filename);
 
+    MyDataStructure::String html;
+    MyDataStructure::stack<HTMLElement> doms;
+    HTMLElement *root;
+public:
+    HTMLparser(std::string filename);
+    void parse();
 };
 
 

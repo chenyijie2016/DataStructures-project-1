@@ -9,14 +9,16 @@
 
 namespace MyDataStructure
 {
+    typedef char c;
+
     //可能出现的错误
     enum ERROR
     {
         NO_ERROR,
         STACK_MEMORY_OVERFLOW,
         STACK_EMPTY,
-        STRING_OVERFLOW
-
+        STRING_OVERFLOW,
+        SUBSTRING_ERROR,
     };
 
 
@@ -24,9 +26,14 @@ namespace MyDataStructure
 #define STACK_INCREMENT 50
 
     //自定义栈
-    template<class T>
+    template <class T>
     class stack
     {
+    public:
+
+        T* top;
+        T* base;
+        int stacksize;
     public:
         stack()
         {
@@ -35,22 +42,16 @@ namespace MyDataStructure
             stacksize = STACK_INIT_SIZE;
         }
 
-        //Data field
-        T *top;
-        T *base;
-        int stacksize;
-
-        // Method
         void push(T data);
 
         T pop();
 
-        T gettop();
+        T* gettop();
 
         bool is_empty();
     };
 
-    template<class T>
+    template <class T>
     void stack<T>::push(T data)
     {
         if (top - base >= stacksize)
@@ -67,7 +68,7 @@ namespace MyDataStructure
         *top = data;
     }
 
-    template<class T>
+    template <class T>
     T stack<T>::pop()
     {
         if (top == base)
@@ -78,17 +79,17 @@ namespace MyDataStructure
         return e;
     }
 
-    template<class T>
-    T stack<T>::gettop()
+    template <class T>
+    T* stack<T>::gettop()
     {
         if (top == base)
         {
             throw STACK_EMPTY;
         }
-        return *top;
+        return top;
     }
 
-    template<class T>
+    template <class T>
     bool stack<T>::is_empty()
     {
         return top == base;
@@ -98,18 +99,31 @@ namespace MyDataStructure
     class String
     {
     public:
-        wchar_t *ch;
+
+        c* ch;
         int length;
+    public:
         String() = default;
 
-        explicit String(wchar_t *ch);
+        explicit String(c* ch);
 
         explicit String(std::string);
 
-        wchar_t &operator[](int index);
+        c& operator[](int index);
 
+        c indexOf(int index);
+
+        String substring(int pos, int end);
+
+        String concat(String s);
+
+        //friend std::ostream& operator<<(std::ostream& out, String& s);
+
+        //friend bool strcompare(String& s1, String& s2);
         //friend bool operator==(String &s1, String &s2);
     };
+    std::ostream& operator<<(std::ostream& out, String& s);
+    bool strcompare(String s1, String s2);
 };
 
 #endif //_DATASTRUCTURE_H

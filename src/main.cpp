@@ -2,20 +2,25 @@
 #include <fstream>
 #include "Network.h"
 #include "CSVparser.hpp"
-
+#include "DataStructure.h"
+#include <locale>
+#include "HTMLparser.h"
 void DownloadPages();
+
 
 int main()
 {
-
-    //DownloadPages();
-
+    HTMLparser htmlparser("16.html");
+    //htmlparser.parse();
+    
+    getchar();
     return 0;
 }
 
 
+
 /**
- * \brief ÏÂÔØÍøÒ³ÎÄ¼ş,Ê¹ÓÃlibcurl¿â
+ * \brief ä¸‹è½½ç½‘é¡µæ–‡ä»¶,ä½¿ç”¨libcurlåº“
  */
 void DownloadPages()
 {
@@ -38,6 +43,5 @@ void DownloadPages()
     }
     catch (...)
     {
-
     }
 }
