@@ -9,7 +9,7 @@
 
 namespace MyDataStructure
 {
-    typedef char c;
+    typedef wchar_t c;
 
     //可能出现的错误
     enum ERROR
@@ -19,6 +19,7 @@ namespace MyDataStructure
         STACK_EMPTY,
         STRING_OVERFLOW,
         SUBSTRING_ERROR,
+        SUBSTRING_OVER_LENGTH,
     };
 
 
@@ -109,13 +110,19 @@ namespace MyDataStructure
 
         explicit String(std::string);
 
+        explicit String(std::wstring);
         c& operator[](int index);
 
         c indexOf(int index);
 
-        String substring(int pos, int end);
+        String *substring(int pos, int end);
 
         String concat(String s);
+
+        void output();
+
+        virtual ~String();
+
 
         //friend std::ostream& operator<<(std::ostream& out, String& s);
 
@@ -124,6 +131,7 @@ namespace MyDataStructure
     };
     std::ostream& operator<<(std::ostream& out, String& s);
     bool strcompare(String s1, String s2);
+    bool strcompare(String *s1, String *s2);
 };
 
 #endif //_DATASTRUCTURE_H

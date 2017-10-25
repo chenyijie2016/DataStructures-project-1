@@ -30,12 +30,22 @@ MyDataStructure::String::String(c* chars)
 
 MyDataStructure::String::String(std::string chars)
 {
-    if (!(ch = (c*)malloc(chars.size() * sizeof(c))))
+    if (!(ch = new c[chars.size()]))
     {
         throw STRING_OVERFLOW;
     }
     ch = (c*)chars.data();
     length = chars.size();
+}
+
+MyDataStructure::String::String(std::wstring chars)
+{
+    if (!(ch = new c[chars.length()]))
+    {
+        throw STRING_OVERFLOW;
+    }
+    ch = (c*)chars.c_str();
+    length = chars.length();
 }
 
 
@@ -49,26 +59,40 @@ MyDataStructure::c MyDataStructure::String::indexOf(int index)
     return ch[index];
 }
 
-MyDataStructure::String MyDataStructure::String::substring(int pos, int len)
+MyDataStructure::String* MyDataStructure::String::substring(int pos, int len)
 {
     if (pos < 1 || pos > length || len <= 0 || len > length - pos + 1)
     {
-        throw SUBSTRING_ERROR;
+        throw SUBSTRING_OVER_LENGTH;
     }
     auto sub = new String;
-    sub->ch = (c*)malloc(sizeof(c) * len);
+    if (!(sub->ch = new c[len + 1]))
+    {
+        throw SUBSTRING_ERROR;
+    }
+
     sub->length = len;
     for (int i = 0; i < len; i++)
     {
         sub->ch[i] = ch[pos - 1 + i];
     }
-    return *sub;
+    return sub;
 }
 
 MyDataStructure::String MyDataStructure::String::concat(String s)
 {
     //TODO
     //return nullptr;
+}
+
+void MyDataStructure::String::output()
+{
+    printf("%ls", ch);
+}
+
+MyDataStructure::String::~String()
+{
+    delete[] ch;
 }
 
 std::ostream& MyDataStructure::operator<<(std::ostream& out, String& s)
@@ -80,12 +104,12 @@ std::ostream& MyDataStructure::operator<<(std::ostream& out, String& s)
     return out;
 }
 
-bool MyDataStructure::strcompare(String s1, String s2)
+bool MyDataStructure::strcompare(String* s1, String* s2)
 {
-    for (int i = 0; i < s1.length && i < s2.length; ++i)
+    for (int i = 0; i < s1->length && i < s2->length; ++i)
     {
-        if (s1.ch[i] != s2.ch[i])
-            return s1.ch[i] - s2.ch[i];
+        if (s1->ch[i] != s2->ch[i])
+            return s1->ch[i] - s2->ch[i];
     }
-    return s1.length - s2.length;
+    return s1->length - s2->length;
 }

@@ -1,4 +1,4 @@
-#include <iostream>
+﻿#include <iostream>
 #include <fstream>
 #include "Network.h"
 #include "CSVparser.hpp"
@@ -6,12 +6,19 @@
 #include <locale>
 #include "HTMLparser.h"
 void DownloadPages();
-
+using namespace std;
 
 int main()
 {
+    setlocale(LC_CTYPE, "zh_CN.UTF-8");
     HTMLparser htmlparser("16.html");
-    //htmlparser.parse();
+    htmlparser.parse();
+    
+    
+//    auto a = wstring(L"决定是否开放你就开始");
+//    wcout << a.length() << endl;
+//    wcout << a << endl;
+//    wprintf(a.c_str());
     
     getchar();
     return 0;

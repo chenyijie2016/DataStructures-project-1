@@ -26,8 +26,8 @@ class HTMLparser
 {
 public:
 
-    MyDataStructure::String html;
-    MyDataStructure::stack<HTMLElement> doms;
+    MyDataStructure::String* html;
+    MyDataStructure::stack<HTMLElement*> doms;
     HTMLElement *root;
 public:
     HTMLparser(std::string filename);
