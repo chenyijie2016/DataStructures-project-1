@@ -12,14 +12,8 @@ int main()
 {
     setlocale(LC_CTYPE, "zh_CN.UTF-8");
     HTMLparser htmlparser("16.html");
-    htmlparser.parse();
-    
-    
-//    auto a = wstring(L"决定是否开放你就开始");
-//    wcout << a.length() << endl;
-//    wcout << a << endl;
-//    wprintf(a.c_str());
-    
+    //htmlparser.parse();
+   
     getchar();
     return 0;
 }

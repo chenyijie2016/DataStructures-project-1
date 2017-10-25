@@ -66,7 +66,7 @@ namespace MyDataStructure
             stacksize += STACK_INCREMENT;
         }
 
-        *top = data;
+        *top++ = data;
     }
 
     template <class T>
@@ -87,7 +87,7 @@ namespace MyDataStructure
         {
             throw STACK_EMPTY;
         }
-        return top;
+        return top - 1;
     }
 
     template <class T>
@@ -115,7 +115,7 @@ namespace MyDataStructure
 
         c indexOf(int index);
 
-        String *substring(int pos, int end);
+        String* substring(int pos, int end);
 
         String concat(String s);
 
@@ -129,9 +129,10 @@ namespace MyDataStructure
         //friend bool strcompare(String& s1, String& s2);
         //friend bool operator==(String &s1, String &s2);
     };
+
     std::ostream& operator<<(std::ostream& out, String& s);
     bool strcompare(String s1, String s2);
-    bool strcompare(String *s1, String *s2);
+    bool strcompare(String* s1, String* s2);
 };
 
 #endif //_DATASTRUCTURE_H

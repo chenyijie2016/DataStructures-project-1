@@ -87,7 +87,10 @@ MyDataStructure::String MyDataStructure::String::concat(String s)
 
 void MyDataStructure::String::output()
 {
-    printf("%ls", ch);
+    for (int i = 0; i < length; i++)
+    {
+        wprintf(L"%c", ch[i]);
+    }
 }
 
 MyDataStructure::String::~String()
@@ -106,6 +109,7 @@ std::ostream& MyDataStructure::operator<<(std::ostream& out, String& s)
 
 bool MyDataStructure::strcompare(String* s1, String* s2)
 {
+    //wprintf(L"compare:[%ls], [%ls] \r\n", s1->ch, s2->ch);
     for (int i = 0; i < s1->length && i < s2->length; ++i)
     {
         if (s1->ch[i] != s2->ch[i])

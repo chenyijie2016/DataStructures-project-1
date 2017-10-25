@@ -4,49 +4,46 @@
 
 #include "HTMLparser.h"
 #include <fstream>
-using namespace std;
-MyDataStructure::String start_token[] = {
-    MyDataStructure::String(wstring(L"<html")),
-    MyDataStructure::String(wstring(L"<head")),
-    MyDataStructure::String(wstring(L"<meta")),
-    MyDataStructure::String(wstring(L"<link")),
-    MyDataStructure::String(wstring(L"<base")),
-    MyDataStructure::String(wstring(L"<script")),
-    MyDataStructure::String(wstring(L"<body")),
-    MyDataStructure::String(wstring(L"<a")),
-    MyDataStructure::String(wstring(L"<strong")),
-    MyDataStructure::String(wstring(L"<ul")),
-    MyDataStructure::String(wstring(L"<li")),
-    MyDataStructure::String(wstring(L"<span")),
-    //MyDataStructure::String("<img"),//无闭合，特殊处理
-    MyDataStructure::String(wstring(L"<dl")),
-    MyDataStructure::String(wstring(L"<dd")),
-    MyDataStructure::String(wstring(L"<input")),
-    MyDataStructure::String(wstring(L"<form")),
-    MyDataStructure::String(wstring(L"<table")),
-    MyDataStructure::String(wstring(L"<tr")),
-    MyDataStructure::String(wstring(L"<td")),
-    MyDataStructure::String(wstring(L"<button")),
-    MyDataStructure::String(wstring(L"<style")),
-    //    MyDataStructure::String("<html"),
-    //    MyDataStructure::String("<html"),
+#include <locale.h>
+#include <winuser.h>
 
-};
-MyDataStructure::String end_token[] = {
-    MyDataStructure::String(wstring(L"</")),
-    MyDataStructure::String(wstring(L"/>"))
-};
 
 HTMLparser::HTMLparser(std::string filename)
 {
+    setlocale(LC_CTYPE, "chs");
+    //start_token = new MyDataStructure::String*;
+    start_token[0] = new MyDataStructure::String(std::wstring(L"<html"));
+    start_token[1] = new MyDataStructure::String(std::wstring(L"<head"));
+    start_token[2] = new MyDataStructure::String(std::wstring(L"<meta"));
+    start_token[3] = new MyDataStructure::String(std::wstring(L"<link"));
+    start_token[4] = new MyDataStructure::String(std::wstring(L"<base"));
+    start_token[5] = new MyDataStructure::String(std::wstring(L"<script"));
+    start_token[6] = new MyDataStructure::String(std::wstring(L"<body"));
+    start_token[7] = new MyDataStructure::String(std::wstring(L"<a"));
+    start_token[8] = new MyDataStructure::String(std::wstring(L"<strong"));
+    start_token[9] = new MyDataStructure::String(std::wstring(L"<ul"));
+    start_token[10] = new MyDataStructure::String(std::wstring(L"<li"));
+    start_token[11] = new MyDataStructure::String(std::wstring(L"<span"));
+    //MyDataStructure::String("<img"),//无闭合，特殊处理
+    start_token[12] = new MyDataStructure::String(std::wstring(L"<dl"));
+    start_token[13] = new MyDataStructure::String(std::wstring(L"<dd"));
+    start_token[14] = new MyDataStructure::String(std::wstring(L"<input"));
+    start_token[15] = new MyDataStructure::String(std::wstring(L"<form"));
+    start_token[16] = new MyDataStructure::String(std::wstring(L"<table"));
+    start_token[17] = new MyDataStructure::String(std::wstring(L"<tr"));
+    start_token[18] = new MyDataStructure::String(std::wstring(L"<td"));
+    start_token[19] = new MyDataStructure::String(std::wstring(L"<button"));
+    start_token[20] = new MyDataStructure::String(std::wstring(L"<style"));
+
+    end_token[0] = new MyDataStructure::String(std::wstring(L"</"));
+    end_token[1] = new MyDataStructure::String(std::wstring(L"/>"));
+
     std::wifstream tmp("./temp/" + filename);
     std::wstring str((std::istreambuf_iterator<wchar_t>(tmp)),
                      std::istreambuf_iterator<wchar_t>());
 
     html = new MyDataStructure::String(str);
-    printf("%ls\n", str.c_str());
-    printf("%S\n", start_token[1].ch);
-    //    cout << start_token[1].length;
+    parse();
 }
 
 void HTMLparser::parse()
@@ -55,44 +52,63 @@ void HTMLparser::parse()
     int total = 0;
     for (int i = 0; i < html->length; i++)
     {
-        try
+        if (html->ch[i] == L'<' || html->ch[i] == L'/')
         {
-            for (int j = 0; j < 21; j++)
+            try
             {
-
-                auto sub = html->substring(i + 1, start_token[j].length);
-                //new  MyDataStructure::String("");
-
-                //auto sub = new  MyDataStructure::String("");
-                if (MyDataStructure::strcompare(sub, &start_token[j]) == 0)
+                for (int j = 0; j < 21; j++)
                 {
-                    //std::cout << *sub << "  " << start_token[j] << std::endl;
-                    std::cout << "new dom" << total++ << std::endl;
-                    auto dom = new HTMLElement;
-                    dom->_type = j;
-
-                    if (!doms.is_empty())
+                    auto sub = html->substring(i + 1, start_token[j]->length);
+                    if (MyDataStructure::strcompare(sub, start_token[j]) == 0)
                     {
-                        dom->parent = *doms.gettop();
+                        std::cout << i << std::endl;
+                        for (int k = 0; k < doms.top - doms.base + 1; k++)
+                        {
+                            std::cout << "\t";
+                        }
+                        std::cout << "++dom " << total++ << " ";
+                        wprintf(L"type=%ls \n", start_token[j]->ch);
+                        auto dom = new HTMLElement;
+                        dom->_type = j;
+
+                        if (!doms.is_empty())
+                        {
+                            dom->parent = doms.gettop();
+                        }
+                        doms.push(*dom);
                     }
-                    doms.push(dom);
-                    //std::cout << start_token[j] << std::endl;
+
+                    delete sub;
                 }
-                delete sub;
+                for (int j = 0; j < 2; j++)
+                {
+                    auto sub = html->substring(i + 1, end_token[j]->length);
+                    if (MyDataStructure::strcompare(sub, end_token[j]) == 0)
+                    {
+                        for (int k = 0; k < doms.top - doms.base; k++)
+                        {
+                            std::cout << "\t";
+                        }
 
-
+                        std::cout << i << " --end dom " << total++;
+                        //std::cout << " type " << doms.gettop()->_type;
+                        //start_token[doms.gettop()->_type]->output();
+                        std::cout << " Stack size:" << doms.top - doms.base << std::endl;
+                        doms.pop();
+                    }
+                }
             }
-        }
-        catch (MyDataStructure::ERROR X)
-        {
-            std::cout << i << "  ERROE CODE " << X << std::endl;
-            break;
-            //system("pause");
 
-        }
-        catch (...)
-        {
-            system("pause");
+            catch (int x)
+            {
+                std::cout << "ERROR" << x << std::endl;
+                system("pause");
+            }
+            catch (...)
+            {
+                std::cout << "ERROR" << std::endl;
+                system("pause");
+            }
         }
     }
 }
