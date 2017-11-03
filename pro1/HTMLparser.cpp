@@ -3,10 +3,8 @@
 using namespace std;
 #include <fstream>
 
-HTMLparser::HTMLparser(std::string filename)
+HTMLparser::HTMLparser(string filename)
 {
-//    setlocale(LC_CTYPE, "chs");
-//    setlocale(LC_ALL, "chs");
     token[0] = new String(std::wstring(L"html"));
     token[1] = new String(std::wstring(L"head"));
     token[2] = new String(std::wstring(L"meta"));//*
@@ -22,7 +20,7 @@ HTMLparser::HTMLparser(std::string filename)
     token[12] = new String(std::wstring(L"dl"));
     token[13] = new String(std::wstring(L"dd"));
     token[14] = new String(std::wstring(L"input"));//*
-    token[15] = new String(std::wstring(L"dt"));// ???? bug for g++???
+    token[15] = new String(std::wstring(L"dt"));//
     token[16] = new String(std::wstring(L"table"));
     token[17] = new String(std::wstring(L"tr"));
     token[18] = new String(std::wstring(L"td"));
@@ -43,26 +41,24 @@ HTMLparser::HTMLparser(std::string filename)
     token[33] = new String(std::wstring(L"iframe"));
     token[34] = new String(std::wstring(L"b"));
     token[35] = new String(std::wstring(L"h4"));
-    //    end_token[0] = new String(std::wstring(L"</"));
-    //    end_token[1] = new String(std::wstring(L"/>"));
-    //    end_token[2] = new String(std::wstring(L" >"));
-    //
-    //
+
+
     token_number = 36;
-    //    end_token_number = 2;
 
     wifstream tmp("temp/" + filename);
     wstring str((istreambuf_iterator<wchar_t>(tmp)),
                 istreambuf_iterator<wchar_t>());
-
+    
     //wprintf(L"%ls", str.c_str()) ;
     html = new String(str);
-
     standardized();
-    parse();
+    toknize();
 }
 
-void HTMLparser::parse()
+/**
+ * \brief 使用栈将HTML文本划分成dom节点
+ */
+void HTMLparser::toknize()
 {
     try
     {
@@ -78,31 +74,17 @@ void HTMLparser::parse()
             }
             t->output();
 
-            HTMLElement* e = parser_dom(t);
-            cout << " _type:" << e->_type << "  start?: " << e->is_start_token << endl;
-            //            if (e->_type == 0)
-            //            {
-            //                system("pause");
-            //            }
+            HTMLElement* e = parser_token(t);
+
+            cout << " _type:" << e->_type << "  start?: " << e->is_start_token;
+            cout << endl;
             if (e->is_start_token)
             {
                 if (!is_not_paired(e))
                 {
+                    parse_content(e, t);
+                    e->content->output();
                     cout << "  [not paired]";
-                    if (doms.size() != 0)
-                    {
-                        cout << "[empty]" << endl;
-                        root = e;
-                        //doms.push(*e);
-                        //e->parent = nullptr;
-                    }
-                    else
-                    {
-                        //doms.gettop()->children[doms.gettop()->childnumber++] = *e;
-                        //e->parent = doms.gettop();
-                        //doms.push(*e);
-                    }
-                    cout << "---------------------------Stack-size " << doms.size() << endl;
                 }
                 else
                 {
@@ -111,12 +93,8 @@ void HTMLparser::parse()
             }
             else
             {
-                //result.push_back(doms.pop());
-                //doms.pop();
-                cout << "---------------------------Stack-size " << doms.size() << endl;
             }
-            //cout << endl << turn++ << endl;
-            //delete (e);
+            Push(doms, e);
             delete (t);
             t = html->strtok(L'<');
         }
@@ -128,6 +106,9 @@ void HTMLparser::parse()
 }
 
 
+/**
+ * \brief 预处理html文本，除去换行符及tab
+ */
 void HTMLparser::standardized()
 {
     for (int i = 0; i < html->length; i++)
@@ -143,15 +124,26 @@ void HTMLparser::standardized()
     }
 }
 
+/**
+ * \brief 判断该html节点是否是自闭合的
+ * \param e 
+ * \return true/false
+ */
 bool HTMLparser::is_not_paired(HTMLElement* e)
 {
     auto t = e->_type;
     return t == 2 || t == 4 || t == 10 || t == 14 || t == 22 || t == 26;
 }
 
-HTMLElement* HTMLparser::parser_dom(String* s)
+/**
+ * \brief 从字符串解析出单个HTML节点并判断类型
+ * \param s 
+ * \return 
+ */
+HTMLElement* HTMLparser::parser_token(String* s)
 {
     auto e = new HTMLElement();
+    // 处理结束节点的情况
     if (s->at(1) == L'/')
     {
         e->is_start_token = false;
@@ -173,7 +165,7 @@ HTMLElement* HTMLparser::parser_dom(String* s)
             }
         }
     }
-    else
+    else//处理是开始节点的情况
     {
         e->is_start_token = true;
         for (int i = 1; i < s->length; i++)
@@ -193,5 +185,39 @@ HTMLElement* HTMLparser::parser_dom(String* s)
                 return e;
             }
         }
+    }
+}
+
+/**
+ * \brief 解析html节点e的内容
+ * \param e HTMLElement*
+ * \param s String*
+ */
+void HTMLparser::parse_content(HTMLElement* e, String* s)
+{
+    if (is_not_paired(e))
+    {
+        e->content = new String(wstring(L" "));
+        return;
+    }
+    int start = 0;
+    for (int i = 0; i < s->length; s++)
+    {
+        cout << i;
+
+        if (s->at(i) == L'>')
+        {
+            start = i + 1;
+            break;
+        }
+    }
+
+    if (s->length - start > 0)
+    {
+        e->content = s->substring(start, s->length - start);
+    }
+    else
+    {
+        e->content = new String(wstring(L" "));
     }
 }

@@ -37,14 +37,9 @@ public:
 
     c at(int index);
 
-    //friend std::ostream& operator<<(std::ostream& out, String& s);
-
-    //friend bool strcompare(String& s1, String& s2);
-    //friend bool operator==(String &s1, String &s2);
 };
 
 std::ostream &operator<<(std::ostream &out, String &s);
 
-//bool strcompare(String s1, String s2);
 
 bool strcompare(String *s1, String *s2);

@@ -23,10 +23,8 @@ void NetWork::downloadPages()
             std::cout << i << std::endl;
             std::ostringstream stringStream;
             stringStream << "temp/" << i << ".html";
-            //std::cout << file[i][1] << std::endl;
             auto url = file[i][1].substr(1, file[i][1].size() - 2);
             std::cout << '\r' << '[' << i << '/' << row << "]  ";
-            //<< file[i][1].substr(1, file[i][1].size() - 2);//<< std::endl;
             getUrl(url, stringStream.str());
         }
     }

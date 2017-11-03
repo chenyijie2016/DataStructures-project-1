@@ -1,27 +1,9 @@
 ﻿#pragma once
 
 #include "String.h"
-#include "Stack.cpp"
 #include <vector>
 #include "Stack.h"
-
-
-class HTMLElement
-{
-public:
-    //String content;
-    String *type;
-    bool is_start_token;
-    int _type;
-    //std::map<String, String> attributes;
-
-    std::vector<HTMLElement *> children;
-    HTMLElement *parent;
-
-    ~HTMLElement() {
-        delete(type);
-    }
-};
+#include <map>
 
 
 class HTMLparser
@@ -30,7 +12,7 @@ public:
 
 
     String *html;
-    Stack<HTMLElement> doms;
+    Stack doms;
     HTMLElement *root;
     //std::map<String, int> DOM_TYPES;
     String *token[40];
@@ -41,12 +23,14 @@ public:
 public:
     HTMLparser(std::string filename);
 
-    void parse();
+    void toknize();
 
     void standardized();
 
     bool is_not_paired(HTMLElement *e);
 
-    HTMLElement *parser_dom(String *s);
+    HTMLElement *parser_token(String *s);
+
+    void parse_content(HTMLElement* e, String* s);
 };
 

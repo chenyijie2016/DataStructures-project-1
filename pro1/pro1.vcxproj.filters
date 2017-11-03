@@ -39,6 +39,12 @@
     <ClInclude Include="NetWork.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="HTMLElement.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="cxxopts.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">

@@ -14,18 +14,30 @@ class Error
 {
 public:
     int E_C;
+    char* msg;
 
     Error(int errorcode) : E_C(errorcode)
     {
+        msg = new char[100];
+    }
+
+    Error(const char* errmsg)
+    {
+        msg = new char[100];
+        E_C = 0;
+        strcpy(msg, errmsg);
     }
 
     Error() = default;
 
-    void detail()
-    {
-        std::cout << "Error Code: " << E_C << std::endl;
-        std::cout
-            << "[0] NO_ERROR\n[1]STACK_MEMORY_OVERFLOW\n[2]STACK_EMPTY\n[3]STRING_OVERFLOW\n[4]SUBSTRING_ERROR\n[5]SUBSTRING_OVER_LENGTH";
-        exit(E_C);
-    }
+    void detail();
 };
+
+inline void Error::detail()
+{
+    std::cout << std::endl << "Error Code: [" << E_C << "]" << std::endl;
+    std::cout << "Error message: [" << msg << "]" << std::endl;;
+
+    system("pause");
+    exit(E_C);
+}
