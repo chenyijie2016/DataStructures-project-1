@@ -73,11 +73,11 @@ inline void PageInfo::show()
     type.output();
     std::cout << std::endl;
     if (unicodeencode) {
-        setlocale(LC_ALL, "chs");
+        //setlocale(LC_ALL, "zh_CN.UTF-8");
         std::cout << "发帖内容: ";
         content.output();
         std::cout << std::endl;
-        setlocale(LC_ALL, "chs.gbk");
+        //setlocale(LC_ALL, "chs.gbk");
     }
     else
     {

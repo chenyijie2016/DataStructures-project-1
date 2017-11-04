@@ -1,7 +1,8 @@
 ﻿#include "stdafx.h"
 #include "HTMLparser.h"
+
 using namespace std;
-#include <fstream>
+
 #define  TITLE 3
 #define DIV 25
 #define P 29
@@ -51,12 +52,27 @@ HTMLparser::HTMLparser(string filename)
 
     token_number = 38;
 
-    wifstream tmp("temp/" + filename);
-    wstring str((istreambuf_iterator<wchar_t>(tmp)),
-                istreambuf_iterator<wchar_t>());
+//    wifstream tmp("temp/" + filename);
+//    wstring str((istreambuf_iterator<wchar_t>(tmp)),
+//                istreambuf_iterator<wchar_t>());
 
+    const char *GBK_LOCALE_NAME = ".936"; //GBK在windows下的locale name
+    wstring_convert<std::codecvt_byname<wchar_t, char, mbstate_t>> Conver_GBK(
+        new std::codecvt_byname<wchar_t, char, mbstate_t>(GBK_LOCALE_NAME));
+    FILE *fp;
+    fp = fopen(("temp/" + filename).c_str(), "r");
+    fseek(fp, 0, SEEK_END);
+    int fileSize = ftell(fp);
+    char *buf = new char[fileSize + 1];
+    memset(buf, 0, fileSize + 1);
 
-    html = *new String(str);
+    fseek(fp, 0, SEEK_SET);
+    fread(buf, sizeof(char), fileSize, fp);
+    std::wstring wDst = Conver_GBK.from_bytes(buf);
+    //wprintf(L"%ls", wDst.c_str());
+    delete buf;
+
+    html = *new String(wDst);
     //html.output();
     //standardized();
     toknize();
