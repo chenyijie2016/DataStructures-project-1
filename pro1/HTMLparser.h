@@ -9,15 +9,12 @@
 class HTMLparser
 {
 public:
-
-
-    String *html;
+    String html;
     Stack doms;
     HTMLElement *root;
     //std::map<String, int> DOM_TYPES;
-    String *token[40];
-    String *end_token[10];
-    std::vector<HTMLElement> result;
+    String token[40];
+    std::vector<HTMLElement*> result;
 
     int token_number, end_token_number;
 public:
@@ -29,8 +26,12 @@ public:
 
     bool is_not_paired(HTMLElement *e);
 
-    HTMLElement *parser_token(String *s);
+    HTMLElement *parse_token(String s);
 
-    void parse_content(HTMLElement* e, String* s);
+    void parse_content(HTMLElement* e, String s);
+
+    PageInfo parse();
+
+    PageInfo parse_tree();
 };
 

@@ -23,7 +23,7 @@ public:
 
     Error(const char* errmsg)
     {
-        msg = new char[100];
+        msg = new char[200];
         E_C = 0;
         strcpy(msg, errmsg);
     }
@@ -37,7 +37,5 @@ inline void Error::detail()
 {
     std::cout << std::endl << "Error Code: [" << E_C << "]" << std::endl;
     std::cout << "Error message: [" << msg << "]" << std::endl;;
-
-    system("pause");
-    exit(E_C);
+    abort();
 }

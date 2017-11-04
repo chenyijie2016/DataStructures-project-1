@@ -2,44 +2,48 @@
 
 #include "Error.h"
 
-typedef wchar_t c;
+#include<iostream>
+#define DEBUG
+typedef wchar_t CharType;
+typedef unsigned int SizeType;
 
 class String
 {
-public:
-    c *ch;
-    int length;
-    int current_tok_ptr;
-public:
-    String() = default;
+private:
+    CharType* data;
+    SizeType tok_point;
+    void destory();
 
-    //explicit String(c *ch);
-
-    //explicit String(std::string);
+public:
+    explicit String(const CharType* str = nullptr);
 
     explicit String(std::wstring);
 
-    c &operator[](int index);
+    String(String& str);
 
-    c indexOf(int index);
+    String& operator=(const String& str);
 
-    String *substring(int pos, int end);
+    ~String();
 
-    String concat(String s);
+public:
+    inline CharType& operator[](SizeType index);
 
+    bool operator==(const String str) const;
+
+    SizeType size();
+
+    String substr(SizeType start_p, SizeType end_p);
+
+    SizeType indexof(String& str);
+
+    String concat(String& str);
+
+    bool empty();
+
+    String strtok(CharType delim, bool first = false);
+
+#ifdef DEBUG
     void output();
-
-    virtual ~String();
-
-    String *strtok(wchar_t delimiter);
-
-    String *firststrtok(wchar_t delimiter);
-
-    c at(int index);
-
+#endif
 };
-
-std::ostream &operator<<(std::ostream &out, String &s);
-
-
-bool strcompare(String *s1, String *s2);
+String togbk(String src);
