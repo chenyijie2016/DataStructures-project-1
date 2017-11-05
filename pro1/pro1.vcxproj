@@ -149,7 +149,8 @@
     <ClInclude Include="CSVparser.hpp" />
     <ClInclude Include="cxxopts.hpp" />
     <ClInclude Include="Error.h" />
-    <ClInclude Include="HashTable.h" />
+    <ClInclude Include="LinkList.h" />
+    <ClInclude Include="StringHashTable.h" />
     <ClInclude Include="HTMLElement.h" />
     <ClInclude Include="HTMLparser.h" />
     <ClInclude Include="NetWork.h" />
@@ -161,7 +162,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CSVparser.cpp" />
-    <ClCompile Include="HashTable.cpp" />
+    <ClCompile Include="StringHashTable.cpp" />
     <ClCompile Include="HTMLparser.cpp" />
     <ClCompile Include="NetWork.cpp" />
     <ClCompile Include="main.cpp" />

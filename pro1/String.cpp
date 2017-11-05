@@ -262,7 +262,7 @@ void String::destory()
  * \param src 
  * \return 
  */
-String togbk(String src)
+String decode(String src)
 {
     String b, result;
     String tag;

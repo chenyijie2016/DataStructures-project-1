@@ -46,3 +46,15 @@ void Pop(Stack& S, ElemType& e)
         throw Error("Pop when stack is empty");
     e = *--S.top;
 }
+
+void ClearStack(Stack& S)
+{
+    auto current = S.base;
+    while (current != S.top)
+    {
+        auto next = current + 1;
+        delete *current;
+        current = next;
+    }
+    free(S.base);
+}

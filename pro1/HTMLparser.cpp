@@ -70,7 +70,7 @@ HTMLparser::HTMLparser(string filename)
     fread(buf, sizeof(char), fileSize, fp);
     std::wstring wDst = Conver_GBK.from_bytes(buf);
     //wprintf(L"%ls", wDst.c_str());
-    delete buf;
+    delete[] buf;
 
     html = *new String(wDst);
     //html.output();
@@ -333,17 +333,17 @@ PageInfo HTMLparser::parse()
                 if (result[i - 1]->_type == P)
                 {
                     tmp = result[i - 1]->content;
-                    info.unicodeencode = true;
+                    //info.unicodeencode = true;
                 }
                 else if (result[i - 2]->_type == P)
                 {
                     tmp = result[i - 2]->content;
-                    info.unicodeencode = true;
+                    //info.unicodeencode = true;
                 }
                 else if (result[i - 3]->_type == P)
                 {
                     tmp = result[i - 3]->content;
-                    info.unicodeencode = true;
+                    //info.unicodeencode = true;
                 }
                 else
                 {
@@ -358,7 +358,7 @@ PageInfo HTMLparser::parse()
                 if (u < tmp.size())
                 {
                     info.content = tmp.substr(u, tmp.size());
-                    info.content = togbk(info.content);
+                    info.content = decode(info.content);
                 }
                 tf_found = true;
             }
@@ -378,6 +378,8 @@ PageInfo HTMLparser::parse()
     {
         e.detail();
     }
+
+    ClearStack(doms);
     return info;
 }
 

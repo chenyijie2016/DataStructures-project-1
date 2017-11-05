@@ -22,3 +22,4 @@ int StackLength(Stack S);
 void GetTop(Stack S, ElemType& e);
 void Push(Stack& S, ElemType e);
 void Pop(Stack& S, ElemType& e);
+void ClearStack(Stack &S);

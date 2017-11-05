@@ -1,14 +1,6 @@
 ﻿#pragma once
 
-enum ERROR
-{
-    ABSOULTE_NO_ERROR,
-    STACK_MEMORY_OVERFLOW,
-    STACK_EMPTY,
-    STRING_OVERFLOW,
-    SUBSTRING_ERROR,
-    SUBSTRING_OVER_LENGTH,
-};
+
 
 class Error
 {

@@ -48,7 +48,10 @@
     <ClInclude Include="Vector.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="HashTable.h">
+    <ClInclude Include="StringHashTable.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="LinkList.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
@@ -77,8 +80,8 @@
     <ClCompile Include="Vector.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="HashTable.cpp">
-      <Filter>头文件</Filter>
+    <ClCompile Include="StringHashTable.cpp">
+      <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

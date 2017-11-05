@@ -14,13 +14,11 @@ public:
     HTMLElement() { _type = -1; }
     //std::map<String, String> attributes;
     String get_attr(String attr_name);
-    std::vector<HTMLElement *> children;
-    HTMLElement* parent;
+//    std::vector<HTMLElement *> children;
+//    HTMLElement* parent;
 
-    ~HTMLElement()
-    {
-        //delete(type);
-    }
+    ~HTMLElement() = default;
+    
 };
 
 class PageInfo
@@ -49,7 +47,7 @@ public:
     String type;//发帖类型
     String content;//发帖内容
 
-    bool unicodeencode =false;
+    //bool unicodeencode =false;
 public:
     void show();
 };
@@ -60,7 +58,7 @@ inline void PageInfo::show()
     std::cout << "标    题: ";
     title.output();
     std::cout << std::endl;
-    std::cout<<"作    者: ";
+    std::cout << "作    者: ";
     author.output();
     std::cout << std::endl;
     std::cout << "发帖大类: ";
@@ -72,17 +70,7 @@ inline void PageInfo::show()
     std::cout << "发帖类型: ";
     type.output();
     std::cout << std::endl;
-    if (unicodeencode) {
-        //setlocale(LC_ALL, "zh_CN.UTF-8");
-        std::cout << "发帖内容: ";
-        content.output();
-        std::cout << std::endl;
-        //setlocale(LC_ALL, "chs.gbk");
-    }
-    else
-    {
-        std::cout << "发帖内容: ";
-        content.output();
-        std::cout << std::endl;
-    }
+    std::cout << "发帖内容: ";
+    content.output();
+    std::cout << std::endl;
 }

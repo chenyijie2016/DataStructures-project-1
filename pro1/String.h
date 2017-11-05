@@ -46,4 +46,4 @@ public:
     void output();
 #endif
 };
-String togbk(String src);
+String decode(String src);
