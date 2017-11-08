@@ -1,5 +1,8 @@
 ﻿#pragma once
-
+/*
+ * 模板类:单链表
+ *
+ */
 template <typename ElemType>
 class Node
 {
@@ -29,14 +32,36 @@ public:
         _size = 0;
     }
 
-    //ElemType& operator[](unsigned int index);
+    ElemType& operator[](unsigned int index);
     void insert(ElemType data);
-
-    unsigned int size();
+    void push_back(ElemType data);
+    unsigned int size() const;
     bool contains(ElemType data);
     void remove_all();
 };
 
+template <typename ElemType>
+ElemType& LinkList<ElemType>::operator[](unsigned index)
+{
+    if (index < 0 || index >= _size)
+        throw Error("LinkList operator[]: index out of range");
+    auto current = head;
+    int current_index = 0;
+    while (current)
+    {
+        if (current_index == index)
+        {
+            return (current->_data);
+        }
+        current = current->_next;
+        current_index++;
+    }
+}
+
+/**
+ * \brief 插入数据到链表末尾
+ * \param data 
+ */
 template <typename ElemType>
 void LinkList<ElemType>::insert(ElemType data)
 {
@@ -57,11 +82,24 @@ void LinkList<ElemType>::insert(ElemType data)
 }
 
 template <typename ElemType>
-unsigned int LinkList<ElemType>::size()
+void LinkList<ElemType>::push_back(ElemType data)
+{
+    insert(data);
+}
+
+/**
+ * \brief 获取链表的大小
+ * \return 
+ */
+template <typename ElemType>
+unsigned int LinkList<ElemType>::size() const
 {
     return _size;
 }
 
+/**
+ * \brief 移除所有元素
+ */
 template <typename ElemType>
 void LinkList<ElemType>::remove_all()
 {
@@ -77,6 +115,11 @@ void LinkList<ElemType>::remove_all()
     head = nullptr;
 }
 
+/**
+ * \brief 判断链表中是否含有该元素
+ * \param data 带查找的元素
+ * \return 
+ */
 template <typename ElemType>
 bool LinkList<ElemType>::contains(ElemType data)
 {

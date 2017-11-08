@@ -45,9 +45,6 @@
     <ClInclude Include="cxxopts.hpp">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="Vector.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="StringHashTable.h">
       <Filter>头文件</Filter>
     </ClInclude>
@@ -75,9 +72,6 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="HTMLparser.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="Vector.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="StringHashTable.cpp">

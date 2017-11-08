@@ -9,16 +9,13 @@ public:
     String content;
     String type;
     String classes;
+    String id;
+    
     bool is_start_token;
     int _type;
     HTMLElement() { _type = -1; }
-    //std::map<String, String> attributes;
-    String get_attr(String attr_name);
-//    std::vector<HTMLElement *> children;
-//    HTMLElement* parent;
 
     ~HTMLElement() = default;
-    
 };
 
 class PageInfo
@@ -37,6 +34,7 @@ public:
         subcategory = info.subcategory;
         type = info.type;
         content = info.content;
+        time = info.time;
     }
 
     std::string url;
@@ -46,6 +44,7 @@ public:
     String subcategory;//小类
     String type;//发帖类型
     String content;//发帖内容
+    String time;
 
     //bool unicodeencode =false;
 public:
@@ -72,5 +71,8 @@ inline void PageInfo::show()
     std::cout << std::endl;
     std::cout << "发帖内容: ";
     content.output();
+    std::cout << std::endl;
+    std::cout << "发帖时间: ";
+    time.output();
     std::cout << std::endl;
 }

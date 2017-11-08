@@ -3,7 +3,6 @@
 #include "Error.h"
 
 #include<iostream>
-#define DEBUG
 typedef wchar_t CharType;
 typedef unsigned int SizeType;
 
@@ -12,9 +11,10 @@ class String
 private:
     CharType* data;
     SizeType tok_point;
-    void destory();
+    
 
 public:
+    
     explicit String(const CharType* str = nullptr);
 
     explicit String(std::wstring);
@@ -24,6 +24,7 @@ public:
     String& operator=(const String& str);
 
     ~String();
+    void destory();
 
 public:
     inline CharType& operator[](SizeType index);
@@ -42,8 +43,12 @@ public:
 
     String strtok(CharType delim, bool first = false);
 
-#ifdef DEBUG
+    wchar_t* c_str() const;
+
     void output();
-#endif
+
 };
 String decode(String src);
+String removeChineseSymbol(String str);
+String decode_2(String src);
+bool is_letter_or_number(CharType c);

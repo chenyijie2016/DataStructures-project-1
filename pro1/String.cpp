@@ -1,6 +1,9 @@
 ﻿#include "stdafx.h"
 #include "String.h"
 
+using std::cout;
+using std::endl;
+
 String::String(const CharType* str)
 {
     int size = (str ? wcslen(str) + 1 : 1);
@@ -93,7 +96,7 @@ String String::substr(SizeType start_p, SizeType end_p)
 {
     if (start_p < 0 || start_p >= size() || end_p < 0 || end_p > size() || start_p >= end_p)
     {
-        std::cout << "Traceback start_p= " << start_p << "  end_p= " << end_p << std::endl;
+        std::cout << "Traceback: start_p= " << start_p << "  end_p= " << end_p << std::endl;
         throw Error("String::substr: index error");
     }
     CharType* subdata = new CharType[end_p - start_p + 1];
@@ -192,7 +195,7 @@ String String::strtok(CharType delim, bool first)
     if (first)
     {
         int start = 0, end = 0, i;
-        for (i = 1; i < size(); i++)
+        for (i = 0; i < size(); i++)
         {
             if (data[i] == delim)
             {
@@ -244,6 +247,11 @@ String String::strtok(CharType delim, bool first)
     }
 }
 
+wchar_t* String::c_str() const
+{
+    return data;
+}
+
 
 /**
  * \brief 释放内存
@@ -258,53 +266,160 @@ void String::destory()
 }
 
 /**
- * \brief 将src中的unicode编码字符转为gbk编码
+ * \brief 将src中的unicode编码字符转为utf-8编码
  * \param src 
  * \return 
  */
 String decode(String src)
 {
-    String b, result;
-    String tag;
-    tag = String(L"&#");
-    int current_p = 0;
+    //去除$nbsp;(空格)
+    String tag2(L"&nbsp");
+
     while (true)
     {
-        unsigned int start = src.indexof(tag);
-        if (start == src.size())
-        {
-            String temp;
-            if (start > current_p)
-                temp = src.substr(current_p, start);
-            result = result.concat(temp);
+        int spaceindex = src.indexof(tag2);
+        if (spaceindex == src.size())
             break;
-        }
-        String temp;
-        if (start > current_p)
-            temp = src.substr(current_p, start);
-        result = result.concat(temp);
-        current_p = start;
-        b = src.substr(start + 2, start + 7);
-        int ans = 0;
-        for (int i = 0; i < 5; i++)
+        for (int i = spaceindex; i < spaceindex + 7; i++)
         {
-            ans = ans * 10;
-            ans += b[i] - L'0';
+            src[i] = L' ';
         }
-        CharType tmp[] = L" ";
-        tmp[0] = ans;
-        String tmpstr(tmp);
-        result = result.concat(tmpstr);
+    }
 
-        src = src.substr(start + 7, src.size());
+    String result;
+    String tag_end(L";");
+    String tag_front(L"&");
+    //Add head
+    unsigned int first_tok = src.indexof(tag_front);
+    cout << first_tok;
+    if (first_tok > 0)
+    {
+        String tmp;
+        tmp = src.substr(0, first_tok);
+        result = result.concat(tmp);
+    }
+
+    String temp;
+    temp = (src.strtok(L'&', true));
+   
+    while (!temp.empty())
+    {
+
+        int ans = 0;
+//        temp.output();
+//        cout << " ";
+        for (int i = 2; i < temp.indexof(tag_end); i++)
+        {
+            ans = ans * 10 + temp[i] - L'0';
+        }
+
+        wchar_t ch[] = L" ";
+        ch[0] = static_cast<wchar_t>(ans);
+
+
+        String tmp;
+        tmp = String(ch);
+        result = result.concat(tmp);
+        if (temp.indexof(tag_end) + 1 < temp.size())
+            result = result.concat(temp.substr(temp.indexof(tag_end) + 1, temp.size()));
+        temp = src.strtok(L'&');
+    }
+
+   
+
+
+    return result;
+}
+
+String decode_2(String src)
+{
+    String result;
+    String tag_end(L";");
+    String tag_front(L"&");
+    //Add head
+    unsigned int first_tok = src.indexof(tag_front);
+    if (first_tok > 0)
+    {
+        String tmp;
+        tmp = src.substr(0, first_tok);
+        result = result.concat(tmp);
+    }
+
+    String temp;
+    temp = (src.strtok(L'&', true));
+
+    while (!temp.empty())
+    {
+        
+        int ans = 0;
+
+        for (int i = 2; i < temp.indexof(tag_end); i++)
+        {
+            ans = ans * 10 + temp[i] - L'0';
+        }
+        
+        wchar_t ch[] = L" ";
+        ch[0] = static_cast<wchar_t>(ans);
+       
+       
+        String tmp;
+        tmp = String(ch);
+        result = result.concat(tmp);
+        if (temp.indexof(tag_end) + 1 < temp.size())
+            result = result.concat(temp.substr(temp.indexof(tag_end) + 1, temp.size()));
+        temp = src.strtok(L'&');
     }
     return result;
 }
-#ifdef DEBUG
+
 
 void String::output()
 {
     wprintf(L"%ls", data);
 }
 
-#endif
+String removeChineseSymbol(String str)
+{
+    String symbol[20];
+    symbol[0] = String(L"，");
+    symbol[1] = String(L"；");
+    symbol[2] = String(L"·");
+    symbol[3] = String(L"！");
+    symbol[4] = String(L"？");
+    symbol[5] = String(L"￥");
+    symbol[6] = String(L"。");
+    symbol[7] = String(L"～");
+    symbol[8] = String(L"：");
+    symbol[9] = String(L"‘");
+    symbol[10] = String(L";");
+    symbol[11] = String(L" ");
+    symbol[12] = String(L",");
+    symbol[13] = String(L"、");
+    symbol[14] = String(L"’");
+    symbol[15] = String(L"/");
+    symbol[16] = String(L".");
+    symbol[17] = String(L"“");
+    symbol[18] = String(L"”");
+    String result;
+    for (int i = 0; i < str.size(); i++)
+    {
+        bool is_symbol = false;
+        for (int j = 0; j < 19; j++)
+        {
+            if (str.substr(i, i + 1) == symbol[j])
+            {
+                is_symbol = true;
+                break;
+            }
+        }
+        if (!is_symbol)
+            result = result.concat(str.substr(i, i + 1));
+    }
+    return result;
+}
+
+bool is_letter_or_number(CharType c)
+{
+    return (c >= L'0' && c <= L'9') || (c >= L'a' && c <= L'z') || (c >= L'A' && c <= L'Z') || (c == L'-') || (c ==
+        L'——');
+}

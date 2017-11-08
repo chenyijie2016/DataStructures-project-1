@@ -9,13 +9,11 @@ class StringHashTable
 {
 public:
     LinkList<String>* data;
-    unsigned int hashfunction(String str);
+    static unsigned int hashfunction(String str);
     StringHashTable();
 
-    StringHashTable(const StringHashTable& sht)
-    {
-        data = sht.data;
-    }
+    StringHashTable(const StringHashTable& sht);
+
 
     void insert(String str);
     bool operator[](String str);

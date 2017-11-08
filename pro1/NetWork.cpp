@@ -6,7 +6,7 @@ using namespace std;
 void NetWork::getUrl(std::string url, std::string filename)
 {
     auto cmd = "curl.exe " + url + " -o " + filename;
-    cout << cmd << endl;
+    // cout << cmd << endl;
     system(cmd.c_str());
 }
 

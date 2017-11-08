@@ -1,13 +1,18 @@
 ﻿#include "stdafx.h"
 #include "StringHashTable.h"
 
+/**
+ * \brief 简易的字符串哈希函数
+ * \param str 字符串
+ * \return 哈希值，范围在[0,HASH_TABLE_SIZE)
+ */
 unsigned int StringHashTable::hashfunction(String str)
 {
     unsigned int hash = 0;
     int seed = 233;
     for (int i = 0; i < str.size(); i++)
     {
-        hash = hash*seed + str[i];
+        hash = hash * seed + str[i];
         hash = hash % HASH_TABLE_SIZE;
     }
     return hash;
@@ -23,6 +28,15 @@ StringHashTable::StringHashTable()
     memset(data, NULL, HASH_TABLE_SIZE);
 }
 
+StringHashTable::StringHashTable(const StringHashTable& sht)
+{
+    data = sht.data;
+}
+
+/**
+ * \brief 向哈希表中插入元素
+ * \param str 
+ */
 void StringHashTable::insert(String str)
 {
     auto hashcode = hashfunction(str);
@@ -32,6 +46,12 @@ void StringHashTable::insert(String str)
     }
 }
 
+
+/**
+ * \brief 操作符[] 判断str是否在哈希表中
+ * \param str 
+ * \return 
+ */
 bool StringHashTable::operator[](String str)
 {
     auto hashcode = hashfunction(str);

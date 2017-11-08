@@ -7,6 +7,7 @@ using namespace std;
 #define DIV 25
 #define P 29
 #define TD 18
+#define EM 27
 
 //#define DEBUG_OUTPUT
 HTMLparser::HTMLparser(string filename)
@@ -51,19 +52,19 @@ HTMLparser::HTMLparser(string filename)
     token[37] = String(L"ignore_js_op");
 
     token_number = 38;
+    load(filename);
+}
 
-//    wifstream tmp("temp/" + filename);
-//    wstring str((istreambuf_iterator<wchar_t>(tmp)),
-//                istreambuf_iterator<wchar_t>());
-
-    const char *GBK_LOCALE_NAME = ".936"; //GBK在windows下的locale name
+void HTMLparser::load(std::string filename)
+{
+    const char* GBK_LOCALE_NAME = ".936"; //GBK在windows下的locale name
     wstring_convert<std::codecvt_byname<wchar_t, char, mbstate_t>> Conver_GBK(
         new std::codecvt_byname<wchar_t, char, mbstate_t>(GBK_LOCALE_NAME));
-    FILE *fp;
+    FILE* fp;
     fp = fopen(("temp/" + filename).c_str(), "r");
     fseek(fp, 0, SEEK_END);
     int fileSize = ftell(fp);
-    char *buf = new char[fileSize + 1];
+    char* buf = new char[fileSize + 1];
     memset(buf, 0, fileSize + 1);
 
     fseek(fp, 0, SEEK_SET);
@@ -71,12 +72,8 @@ HTMLparser::HTMLparser(string filename)
     std::wstring wDst = Conver_GBK.from_bytes(buf);
     //wprintf(L"%ls", wDst.c_str());
     delete[] buf;
-
+    buf = nullptr;
     html = *new String(wDst);
-    //html.output();
-    //standardized();
-    toknize();
-    parse().show();
 }
 
 /**
@@ -225,8 +222,9 @@ HTMLElement* HTMLparser::parse_token(String s)
                 if (e->_type == -1)
                 {
                     cout << "Warning: 不支持的dom标志" << endl;
-                    cout << "Tag: "; s.output(); cout << endl;
-
+                    cout << "Tag: ";
+                    s.output();
+                    cout << endl;
                 }
                 return e;
             }
@@ -252,13 +250,15 @@ HTMLElement* HTMLparser::parse_token(String s)
                 if (e->_type == -1)
                 {
                     cout << "Warning: 不支持的dom标志" << endl;
-                    cout << "Tag: "; s.output(); cout << endl;
-
+                    cout << "Tag: ";
+                    s.output();
+                    cout << endl;
                 }
                 return e;
             }
         }
     }
+    return nullptr;
 }
 
 /**
@@ -298,6 +298,18 @@ void HTMLparser::parse_content(HTMLElement* e, String s)
         }
         e->classes = s.substr(start + 7, j);
     }
+    //提取 id 信息
+    if (s.indexof(String(L"id")) != s.size())
+    {
+        int start = s.indexof(String(L"id"));
+        int j;
+        for (j = start + 7; j < s.size(); j++)
+        {
+            if (s[j] == L'\"')
+                break;
+        }
+        e->id = s.substr(start + 4, j);
+    }
 }
 
 /**
@@ -315,6 +327,7 @@ PageInfo HTMLparser::parse()
     String class_ts(L"ts z h1");
     bool author_found = false;
     bool tf_found = false;
+    bool time_found = false;
     try
     {
         for (int i = 0; i < result.size(); i++)
@@ -323,6 +336,11 @@ PageInfo HTMLparser::parse()
             {
                 info.author = result[i - 1]->content;
                 author_found = true;
+            }
+            if(result[i]->_type==DIV && result[i]->classes == class_authi && result[i-5]->_type == EM && !time_found)
+            {
+                info.time = result[i - 5]->content;
+                time_found = true;
             }
 
             if (result[i]->_type == TD && result[i]->classes == class_t_f && !tf_found)
@@ -333,31 +351,29 @@ PageInfo HTMLparser::parse()
                 if (result[i - 1]->_type == P)
                 {
                     tmp = result[i - 1]->content;
-                    //info.unicodeencode = true;
                 }
                 else if (result[i - 2]->_type == P)
                 {
                     tmp = result[i - 2]->content;
-                    //info.unicodeencode = true;
                 }
                 else if (result[i - 3]->_type == P)
                 {
                     tmp = result[i - 3]->content;
-                    //info.unicodeencode = true;
                 }
                 else
                 {
                     tmp = result[i]->content;
                 }
-                int u = 0;
-                for (u = 0; u < tmp.size(); u++)
+                int real_content_start;
+                for (real_content_start = 0; real_content_start < tmp.size(); real_content_start++)
                 {
-                    if (tmp[u] != L' ' && tmp[u] != L'\n' && tmp[u] != L'\t')
+                    if (tmp[real_content_start] != L' ' && tmp[real_content_start] != L'\n' && tmp[real_content_start]
+                        != L'\t')
                         break;
                 }
-                if (u < tmp.size())
+                if (real_content_start < tmp.size())
                 {
-                    info.content = tmp.substr(u, tmp.size());
+                    info.content = tmp.substr(real_content_start, tmp.size());
                     info.content = decode(info.content);
                 }
                 tf_found = true;
@@ -378,8 +394,7 @@ PageInfo HTMLparser::parse()
     {
         e.detail();
     }
-
-    ClearStack(doms);
+    
     return info;
 }
 
@@ -391,4 +406,11 @@ PageInfo HTMLparser::parse_tree()
 {
     // TODO: 完成树的生成和遍历
     return PageInfo();
+}
+
+void HTMLparser::destory()
+{
+    result.remove_all();
+    ClearStack(doms);
+    html.destory();
 }
