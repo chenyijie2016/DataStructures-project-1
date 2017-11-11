@@ -55,6 +55,10 @@ HTMLparser::HTMLparser(string filename)
     load(filename);
 }
 
+/**
+ * \brief 从GBK编码的网页文件中读取文本并转换为UTF8
+ * \param filename 文件名
+ */
 void HTMLparser::load(std::string filename)
 {
     const char* GBK_LOCALE_NAME = ".936"; //GBK在windows下的locale name
@@ -135,9 +139,9 @@ void HTMLparser::toknize()
                         //html标签错误未闭合
                         //直接放弃最上方节点尝试匹配下一个
                         cout << "Warning: 不匹配的标签" << endl;
-                        cout << endl << "-top:  ";
+                        cout << endl << "栈顶标签: ";
                         top->type.output();
-                        cout << endl << "-current node:  ";
+                        cout << endl << "当前标签: ";
                         e->type.output();
                         while (top)
                         {
@@ -183,8 +187,6 @@ void HTMLparser::standardized()
 
 /**
  * \brief 判断该html节点是否是自闭合的
- * \param e 
- * \return true/false
  */
 bool HTMLparser::is_not_paired(HTMLElement* e)
 {
@@ -194,8 +196,6 @@ bool HTMLparser::is_not_paired(HTMLElement* e)
 
 /**
  * \brief 从字符串解析出单个HTML节点并判断类型
- * \param s 
- * \return 
  */
 HTMLElement* HTMLparser::parse_token(String s)
 {
@@ -263,8 +263,6 @@ HTMLElement* HTMLparser::parse_token(String s)
 
 /**
  * \brief 解析html节点e的内容
- * \param e HTMLElement*
- * \param s String*
  */
 void HTMLparser::parse_content(HTMLElement* e, String s)
 {
@@ -314,7 +312,6 @@ void HTMLparser::parse_content(HTMLElement* e, String s)
 
 /**
  * \brief 从 result 中提取网页信息
- * \return 
  */
 PageInfo HTMLparser::parse()
 {
@@ -408,6 +405,9 @@ PageInfo HTMLparser::parse_tree()
     return PageInfo();
 }
 
+/**
+ * \brief 清理内存
+ */
 void HTMLparser::destory()
 {
     result.remove_all();

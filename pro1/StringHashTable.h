@@ -7,14 +7,13 @@
 
 class StringHashTable
 {
-public:
+private:
     LinkList<String>* data;
-    static unsigned int hashfunction(String str);
+public:
     StringHashTable();
-
     StringHashTable(const StringHashTable& sht);
 
-
+    static unsigned int hashfunction(String str);
     void insert(String str);
     bool operator[](String str);
 };

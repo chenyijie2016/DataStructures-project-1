@@ -25,7 +25,7 @@ StringHashTable::StringHashTable()
     {
         throw Error("Init hashtable fail");
     }
-    memset(data, NULL, HASH_TABLE_SIZE);
+    //memset(data, NULL, HASH_TABLE_SIZE);
 }
 
 StringHashTable::StringHashTable(const StringHashTable& sht)
@@ -35,7 +35,6 @@ StringHashTable::StringHashTable(const StringHashTable& sht)
 
 /**
  * \brief 向哈希表中插入元素
- * \param str 
  */
 void StringHashTable::insert(String str)
 {
@@ -48,11 +47,9 @@ void StringHashTable::insert(String str)
 
 
 /**
- * \brief 操作符[] 判断str是否在哈希表中
- * \param str 
- * \return 
+ * \brief 操作符[] 判断字符串str是否在哈希表中
  */
-bool StringHashTable::operator[](String str)
+bool StringHashTable::operator[]( String str)
 {
     auto hashcode = hashfunction(str);
     return data[hashcode].contains(str);

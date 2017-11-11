@@ -17,7 +17,7 @@ public:
 
     ~HTMLElement() = default;
 };
-
+//存储解析的单个网页信息
 class PageInfo
 {
 public:

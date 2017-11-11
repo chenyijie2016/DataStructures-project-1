@@ -4,7 +4,7 @@
 using std::cout;
 using std::endl;
 
-String::String(const CharType* str)
+String::String(const CharType* str): tok_point(0)
 {
     int size = (str ? wcslen(str) + 1 : 1);
     data = new CharType[size];
@@ -18,14 +18,14 @@ String::String(const CharType* str)
     }
 }
 
-String::String(std::wstring str)
+String::String(std::wstring str): tok_point(0)
 {
     int size = str.size() + 1;
     data = new CharType[size];
     wcscpy(data, str.data());
 }
 
-String::String(String& str)
+String::String( String& str): tok_point(0)
 {
     data = new CharType[str.size() + 1];
     wcscpy(data, str.data);
@@ -33,8 +33,6 @@ String::String(String& str)
 
 /**
  * \brief 赋值(assign)
- * \param str 
- * \return 
  */
 String& String::operator=(const String& str)
 {
@@ -54,9 +52,7 @@ String::~String()
 }
 
 /**
- * \brief 
- * \param index 
- * \return 
+ * \brief 获取字符串下标为index的字符的引用
  */
 CharType& String::operator[](SizeType index)
 {
@@ -69,7 +65,6 @@ CharType& String::operator[](SizeType index)
 
 /**
  * \brief 获取字符串长度
- * \return 
  */
 SizeType String::size()
 {
@@ -87,10 +82,7 @@ bool String::operator==(const String str) const
 }
 
 /**
- * \brief 返回下标从start_p到end_p的子字符串，**不包括end_p**
- * \param start_p 
- * \param end_p 
- * \return 
+ * \brief 返回下标从start_p到end_p的子字符串，不包括end_p!!
  */
 String String::substr(SizeType start_p, SizeType end_p)
 {
@@ -157,7 +149,7 @@ SizeType String::indexof(String& sub_str)
  * \param str 待连接的字符串
  * \return 连接后的字符串,注意此函数不会改变两个连接的字符串的内容
  */
-String String::concat(String& str)
+String String::concat(String str)
 {
     CharType* concatdata = new CharType[size() + str.size() + 1];
     int i, j;
@@ -176,8 +168,7 @@ String String::concat(String& str)
 }
 
 /**
- * \brief 是否为空
- * \return 
+ * \brief 判断字符串是否为空
  */
 bool String::empty()
 {
@@ -185,14 +176,14 @@ bool String::empty()
 }
 
 /**
- * \brief 字符串分割
+ * \brief 字符串分割函数，返回分隔符到下一个分割符之间的子字符串
  * \param delim 分隔符
  * \param first 是否是第一次执行
  * \return 分割出的子字符串，不可继续分割时返回空字符串
  */
 String String::strtok(CharType delim, bool first)
 {
-    if (first)
+    if (first)//第一次执行，需要查找起始位置
     {
         int start = 0, end = 0, i;
         for (i = 0; i < size(); i++)
@@ -247,6 +238,9 @@ String String::strtok(CharType delim, bool first)
     }
 }
 
+/**
+ * \brief 获取wcahr_t[]的数据
+ */
 wchar_t* String::c_str() const
 {
     return data;
@@ -267,12 +261,10 @@ void String::destory()
 
 /**
  * \brief 将src中的unicode编码字符转为utf-8编码
- * \param src 
- * \return 
  */
 String decode(String src)
 {
-    //去除$nbsp;(空格)
+    //去除“$nbsp;”(空格)
     String tag2(L"&nbsp");
 
     while (true)
@@ -289,7 +281,7 @@ String decode(String src)
     String result;
     String tag_end(L";");
     String tag_front(L"&");
-    //Add head
+    
     unsigned int first_tok = src.indexof(tag_front);
     cout << first_tok;
     if (first_tok > 0)
@@ -306,8 +298,6 @@ String decode(String src)
     {
 
         int ans = 0;
-//        temp.output();
-//        cout << " ";
         for (int i = 2; i < temp.indexof(tag_end); i++)
         {
             ans = ans * 10 + temp[i] - L'0';
@@ -331,53 +321,15 @@ String decode(String src)
     return result;
 }
 
-String decode_2(String src)
-{
-    String result;
-    String tag_end(L";");
-    String tag_front(L"&");
-    //Add head
-    unsigned int first_tok = src.indexof(tag_front);
-    if (first_tok > 0)
-    {
-        String tmp;
-        tmp = src.substr(0, first_tok);
-        result = result.concat(tmp);
-    }
-
-    String temp;
-    temp = (src.strtok(L'&', true));
-
-    while (!temp.empty())
-    {
-        
-        int ans = 0;
-
-        for (int i = 2; i < temp.indexof(tag_end); i++)
-        {
-            ans = ans * 10 + temp[i] - L'0';
-        }
-        
-        wchar_t ch[] = L" ";
-        ch[0] = static_cast<wchar_t>(ans);
-       
-       
-        String tmp;
-        tmp = String(ch);
-        result = result.concat(tmp);
-        if (temp.indexof(tag_end) + 1 < temp.size())
-            result = result.concat(temp.substr(temp.indexof(tag_end) + 1, temp.size()));
-        temp = src.strtok(L'&');
-    }
-    return result;
-}
-
 
 void String::output()
 {
     wprintf(L"%ls", data);
 }
 
+/**
+ * \brief 去除中文标点符号
+ */
 String removeChineseSymbol(String str)
 {
     String symbol[20];

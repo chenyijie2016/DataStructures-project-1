@@ -153,7 +153,6 @@
     <ClInclude Include="StringHashTable.h" />
     <ClInclude Include="HTMLElement.h" />
     <ClInclude Include="HTMLparser.h" />
-    <ClInclude Include="NetWork.h" />
     <ClInclude Include="Stack.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="String.h" />
@@ -163,7 +162,6 @@
     <ClCompile Include="CSVparser.cpp" />
     <ClCompile Include="StringHashTable.cpp" />
     <ClCompile Include="HTMLparser.cpp" />
-    <ClCompile Include="NetWork.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Stack.cpp" />
     <ClCompile Include="stdafx.cpp">

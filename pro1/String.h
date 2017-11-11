@@ -11,20 +11,15 @@ class String
 private:
     CharType* data;
     SizeType tok_point;
-    
+
 
 public:
-    
+
     explicit String(const CharType* str = nullptr);
-
     explicit String(std::wstring);
-
     String(String& str);
-
-    String& operator=(const String& str);
-
     ~String();
-    void destory();
+    void destory(); String& operator=(const String& str);
 
 public:
     inline CharType& operator[](SizeType index);
@@ -37,7 +32,7 @@ public:
 
     SizeType indexof(String& str);
 
-    String concat(String& str);
+    String concat(String str);
 
     bool empty();
 
@@ -46,9 +41,8 @@ public:
     wchar_t* c_str() const;
 
     void output();
-
 };
+
 String decode(String src);
 String removeChineseSymbol(String str);
-String decode_2(String src);
 bool is_letter_or_number(CharType c);

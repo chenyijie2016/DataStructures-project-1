@@ -4,8 +4,6 @@
 #define STACK_INCREMENT 50
 #include "Error.h"
 #include "HTMLElement.h"
-
-//class HTMLElement;
 //自定义栈
 typedef HTMLElement* ElemType;
 
