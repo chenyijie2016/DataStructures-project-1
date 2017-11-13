@@ -112,10 +112,6 @@ void HTMLparser::toknize()
                 if (!is_not_paired(e))
                 {
                     parse_content(e, t);
-                    HTMLElement* top;
-                    //                    GetTop(doms, top);
-                    //                    top->children.push_back(e);
-                    //                    e->parent = top;
                     Push(doms, e);
                 }
                 else
